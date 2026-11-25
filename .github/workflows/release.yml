@@ -1,0 +1,51 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "*.*.*.*"
+
+jobs:
+  Build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download Dalamud Latest
+        run: |
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile latest.zip
+          Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
+
+      - name: Restore Project
+        run: dotnet restore JustDance.csproj
+
+      - name: Build Project
+        run: dotnet build --configuration Release JustDance.csproj -p:Version=${{ github.ref_name }} -p:AssemblyVersion=${{ github.ref_name }} -p:FileVersion=${{ github.ref_name }} -p:PackageVersion=${{ github.ref_name }} -p:InformationalVersion=${{ github.ref_name }} --output .\build
+
+      - name: Package Plugin
+        shell: pwsh
+        run: |
+          if (Test-Path .\build\JustDance\latest.zip) {
+            Copy-Item .\build\JustDance\latest.zip .\latest.zip -Force
+          } else {
+            Compress-Archive -Path .\build\* -DestinationPath .\latest.zip -Force
+          }
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v3
+        with:
+          name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          files: ./latest.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

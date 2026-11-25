@@ -1,0 +1,21 @@
+<Project Sdk="Dalamud.NET.Sdk/15.0.0">
+    <PropertyGroup>
+        <Version>1.1.0.0</Version>
+        <TargetFramework>net10.0-windows</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Author>Etupa</Author>
+        <Name>JustDance</Name>
+        <InternalName>JustDance</InternalName>
+        <Punchline>Lightweight Penumbra dance browser and player.</Punchline>
+        <Description>Scans a user-selected Penumbra folder, bridges directly to each mod's current Penumbra settings, groups Start + Loop animations, and toggles mod music settings via Penumbra.</Description>
+        <Tags>penumbra;dance;animation;pap;emote</Tags>
+        <ApplicableVersion>any</ApplicableVersion>
+        <DalamudApiLevel>15</DalamudApiLevel>
+    </PropertyGroup>
+</Project>
